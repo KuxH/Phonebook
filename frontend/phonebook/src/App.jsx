@@ -7,9 +7,11 @@ const App = ()=>{
   const [newName, setNewName] = useState('')
   const addName = (event)=>{
     event.preventDefault()
-    //alert
+    console.log(newName)
+    //alert(name added already)
+    const nameExists = persons.some(person => person.name === newName.trim());
     if(persons.some(person => person.name === newName)){
-      alert(' ${newName} is already added ' )
+      alert(` ${newName.trim()} is already added ` )
       return
     }
     const newPerson = {name: newName}
@@ -22,14 +24,10 @@ const App = ()=>{
   return(
     <div>
       <h2>Phonebook</h2>
-      <ul>
-        {persons.map((persons)=>(
-          <li>{persons.name}</li>
-        ))}
-      </ul>
+      
       <form onSubmit={addName}>
         <div>
-          name: <input 
+          Name: <input 
             value={newName}
             onChange={(event)=>{
               setNewName(event.target.value)
@@ -39,6 +37,12 @@ const App = ()=>{
           <button type="submit">add</button>
         </div>
       </form>
+      <h2>Numbers</h2>
+      <ul>
+        {persons.map((persons,id)=>(
+          <li key={id}>{persons.name}</li>
+        ))}
+      </ul>
     </div>
   )
 }
