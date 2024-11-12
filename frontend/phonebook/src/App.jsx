@@ -1,5 +1,6 @@
 
-import { useState } from "react";
+import { useEffect, useState } from "react"
+import axios from "axios"
 
 const App = ()=>{
   const [persons, setPersons] =useState([])
@@ -7,6 +8,14 @@ const App = ()=>{
   const [newNumber, setNewNumber] = useState('')
   const [searchTerm, setSearchTerm] = useState('')
   const [filterPersons, setFilterPersons] = useState(null)
+  
+  useEffect(()=>{
+    axios.get('http://localhost:3001/api/persons')
+    .then(response =>{
+      setPersons(response.data)
+    })
+    .catch(error => console.error('error fetching:',error))
+  })
   const addName = (event)=>{
     event.preventDefault()
     console.log(newName)
@@ -18,10 +27,16 @@ const App = ()=>{
       alert(` ${newName.trim()} is already added ` )
       return
     }
+
+//save new contact to backend
     const newPerson = {name: newName, number: newNumber}
-    setPersons([...persons, newPerson])
+    axios.post('http://localhost:3001/api/persons', newPerson)
+    .then(response =>{
+    setPersons([...persons, response.data])
     setNewName('')
     setNewNumber('')
+  })
+  .catch(error => console.error('Error adding person:',error))
   }
 
   //filter by name/number

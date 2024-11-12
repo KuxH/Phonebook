@@ -1,4 +1,4 @@
-console.log("hello")
+
 const express =require('express')
 const app =express()
 app.use(express.json())
@@ -29,7 +29,7 @@ app.get('/api/persons',(request,response)=>{
 })
 
 //getting by id
-/*app.get('/api/persons/:id',(request,response)=>{
+app.get('/api/persons/:id',(request,response)=>{
     const id = Number(request.params.id)
     const person = persons.find(person=> person.id===id)
 
@@ -38,7 +38,7 @@ app.get('/api/persons',(request,response)=>{
     } else {
         response.status(404).end()
     }
-})*/
+})
 //deleting by id
 app.delete('/api/persons/:id',(request, response)=>{
     const id = Number(request.params.id)
@@ -58,7 +58,7 @@ app.post('/api/persons',(request,response)=>{
     persons =persons.concat(personObj)
     console.log(persons)
     response.json(personObj)
-    /*let newId = Math.floor(Math.random() * 1000)
+    let newId = Math.floor(Math.random() * 1000)
     while (persons.some(p => p.id === newId)) {
         newId = Math.floor(Math.random() * 1000) 
     }
@@ -68,7 +68,7 @@ app.post('/api/persons',(request,response)=>{
 
     persons.push(newPerson);
 
-    response.status(201).json(newPerson);*/
+    response.status(201).json(newPerson);
 })
 
 //name or number missing
@@ -105,7 +105,7 @@ app.post('/api/persons', (request, response) => {
 
 
 //listeing to this port
-const PORT = 3001
+const PORT = 4003
 app.listen(PORT,()=>{
-    console.log('Server is running on ${PORT}')
+    console.log(`Server is running on ${PORT}`)
 })
