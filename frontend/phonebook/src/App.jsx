@@ -1,29 +1,53 @@
+
 import { useState } from "react";
 
 const App = ()=>{
-  const [persons, setPersons] =useState([
-    {name: 'ram'}
-  ])
+  const [persons, setPersons] =useState([])
   const [newName, setNewName] = useState('')
+  const [newNumber, setNewNumber] = useState('')
+  const [searchTerm, setSearchTerm] = useState('')
+  const [filterPersons, setFilterPersons] = useState(null)
   const addName = (event)=>{
     event.preventDefault()
     console.log(newName)
+
+
     //alert(name added already)
-    const nameExists = persons.some(person => person.name === newName.trim());
+    
     if(persons.some(person => person.name === newName)){
       alert(` ${newName.trim()} is already added ` )
       return
     }
-    const newPerson = {name: newName}
+    const newPerson = {name: newName, number: newNumber}
     setPersons([...persons, newPerson])
     setNewName('')
+    setNewNumber('')
   }
 
-  
+  //filter by name/number
+
+  const searchPersons = ()=>{
+    if (!searchTerm){
+      "No Contacts found"
+    }
+    const searched = persons.filter(person =>
+    person.name.includes(searchTerm) || person.number.includes(searchTerm)
+  )
+  setFilterPersons(searched)
+}
 
   return(
     <div>
       <h2>Phonebook</h2>
+
+      <div>
+        Search: <input
+        value={searchTerm}
+        onChange={(event)=> setSearchTerm(event.target.value)}
+        placeholder="search by name/no"/>
+
+        <button onClick={searchPersons}>Search</button>
+      </div>
       
       <form onSubmit={addName}>
         <div>
@@ -33,14 +57,22 @@ const App = ()=>{
               setNewName(event.target.value)
             }}/>
         </div>
+        
         <div>
-          <button type="submit">add</button>
+        Number: <input
+          value= {newNumber}
+          onChange={(event)=>{
+            setNewNumber(event.target.value)}}
+            />
+      </div>
+      <div>
+          <button type="submit">Add</button>
         </div>
       </form>
-      <h2>Numbers</h2>
+      <h2>Contacts</h2>
       <ul>
-        {persons.map((persons,id)=>(
-          <li key={id}>{persons.name}</li>
+        {(searchTerm ? filterPersons :persons).map((persons,id)=>(
+          <li key={id}>{persons.name} : {persons.number}</li>
         ))}
       </ul>
     </div>
