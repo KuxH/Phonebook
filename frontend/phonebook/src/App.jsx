@@ -19,7 +19,7 @@ const App = ()=>{
   const addName = (event)=>{
     event.preventDefault()
     console.log(newName)
-
+    console.log(newNumber)
 
     //alert(name added already)
     
@@ -27,6 +27,11 @@ const App = ()=>{
       alert(` ${newName.trim()} is already added ` )
       return
     }
+
+   if (persons.some((person) => person.number === newName)) {
+     alert(` ${newNumber.trim()} is already added `);
+     return;
+   } 
 
 //save new contact to backend
     const newPerson = {name: newName, number: newNumber}
