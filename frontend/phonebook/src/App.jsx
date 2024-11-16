@@ -15,7 +15,7 @@ const App = ()=>{
       setPersons(response.data)
     })
     .catch(error => console.error('error fetching:',error))
-  })
+  },[])
   const addName = (event)=>{
     event.preventDefault()
     console.log(newName)
@@ -86,7 +86,7 @@ const App = ()=>{
       </form>
       <h2>Contacts</h2>
       <ul>
-        {(searchTerm ? filterPersons :persons).map((persons,id)=>(
+        {( filterPersons || persons).map((persons,id)=>(
           <li key={id}>{persons.name} : {persons.number}</li>
         ))}
       </ul>

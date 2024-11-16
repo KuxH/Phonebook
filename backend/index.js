@@ -21,7 +21,7 @@ let persons =[
 ]
 
 app.get('/',(request, response)=>{
-    response.send('<h1>hello world whatsup</h1>')
+    response.send('<h1>hello world </h1>')
 })
  //getting persons phonebook
 app.get('/api/persons',(request,response)=>{
@@ -47,65 +47,39 @@ app.delete('/api/persons/:id',(request, response)=>{
 })
 
 //post
-app.post('/api/persons',(request,response)=>{
-    const person =request.body
-    const random=Math.floor(Math.random() * 456789)
-    const personObj ={
-        id:random,
-        name:person.name,
-        number:person.number
-    }
-    persons =persons.concat(personObj)
-    console.log(persons)
-    response.json(personObj)
-    let newId = Math.floor(Math.random() * 1000)
-    while (persons.some(p => p.id === newId)) {
-        newId = Math.floor(Math.random() * 1000) 
+app.post('/api/persons',(req,res)=>{
+    const person = req.body
+
+    //missing name||number
+    if(!person.name || !person.number){
+        return res.status(400).json({error: 'Name or number missing'})
     }
 
-    // Create a new person object with the generated id
-    const newPerson = {  id: newId, ...person }
+    //duplicate name||number
+    const nameExists=persons.some(p => p.name === person.name)
+    if(nameExists){
+        return response.status(409).json({error:'Name do exists'})
+    }
+    const numberExists=persons.some(p => p.number === person.number)
+    if(numberExists){
+        return response.status(409).json({error:'Number do exists'})
+    }
 
-    persons.push(newPerson);
+    //unique id
+    const newId = Math.floor(Math.random()*5444454)
+    while(persons.some(p => p.id === newId)){
+        newId = Math.floor(Math.random()*5444454)
+    }
+    //add new person
+   const newPerson = {...person,id:newId}
+    persons = [...persons,newPerson]
+    res.json(newPerson)
 
-    response.status(201).json(newPerson);
+
 })
-
-//name or number missing
-
-app.post('/api/persons', (request, response)=>{
-    const person = request.body
-
-    if (!person.name || !person.number) {
-        return response.status(400).json({ error: 'Name or number is missing' })
-    }
-    const random = Math.floor(Math.random() * 456789)
-    const personObj = {
-        id: random,
-        name: person.name,
-        number: person.number
-    }
-
-    persons = persons.concat(personObj)
-    console.log(persons)
-    response.json(personObj)
-}
-)
-
-//name already exist
-
-app.post('/api/persons', (request, response) => {
-    const person = request.body
-
-    const nameExists = persons.some(p => p.name === person.name);
-    if (nameExists) {
-        return response.status(409).json({ error: 'Name already exists in the phonebook' });
-    }
-})
-
 
 //listeing to this port
-const PORT = 4003
+const PORT = 3001
 app.listen(PORT,()=>{
     console.log(`Server is running on ${PORT}`)
 })
