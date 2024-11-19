@@ -5,6 +5,8 @@ app.use(express.json())
 const cors = require("cors");
 app.use(cors());
 
+
+const Person = require('./db')
 let persons =[
     {
         "id": 1,
@@ -23,30 +25,30 @@ let persons =[
     },
 ]
 
-app.get('/',(request, response)=>{
-    response.send('<h1>hello world </h1>')
+app.get('/',(req, res)=>{
+    res.send('<h1>Welcome to Phonebook </h1>')
 })
  //getting persons phonebook
-app.get('/api/persons',(request,response)=>{
-    response.json(persons)
+app.get('/api/persons',(req,res)=>{
+    res.json(persons)
 })
 
 //getting by id
-app.get('/api/persons/:id',(request,response)=>{
-    const id = Number(request.params.id)
+app.get('/api/persons/:id',(req,res)=>{
+    const id = Number(req.params.id)
     const person = persons.find(person=> person.id===id)
 
     if(person) {
-        response.json(person)
+        res.json(person)
     } else {
-        response.status(404).end()
+        res.status(404).end()
     }
 })
 //deleting by id
-app.delete('/api/persons/:id',(request, response)=>{
-    const id = Number(request.params.id)
+app.delete('/api/persons/:id',(req, res)=>{
+    const id = Number(req.params.id)
     persons = persons.filter(person => person.id !== id)
-    response.status(204).end()
+    res.status(204).end()
 })
 
 //post
@@ -61,11 +63,11 @@ app.post('/api/persons',(req,res)=>{
     //duplicate name||number
     const nameExists=persons.some(p => p.name === person.name)
     if(nameExists){
-        return response.status(409).json({error:'Name do exists'})
+        return res.status(409).json({error:'Name do exists'})
     }
     const numberExists=persons.some(p => p.number === person.number)
     if(numberExists){
-        return response.status(409).json({error:'Number do exists'})
+        return res.status(409).json({error:'Number do exists'})
     }
 
     //unique id
@@ -82,7 +84,7 @@ app.post('/api/persons',(req,res)=>{
 })
 
 //listeing to this port
-const PORT = 3001
+const PORT = 3002
 app.listen(PORT,()=>{
     console.log(`Server is running on ${PORT}`)
 })
