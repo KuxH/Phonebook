@@ -4,8 +4,10 @@ const middleware = require("./utils/middleware");
 const mongoose = require("mongoose");
 const config = require("./utils/config");
 mongoose.set("strictQuery", false);
+
 const url = config.MONGODB_URI;
 console.log("connecting to", url);
+
 mongoose
   .connect(url)
   .then(() => {
@@ -16,9 +18,14 @@ mongoose
   });
 
 app.use(middleware.requestLogger);
+app.use(express.json());
+
+const personRouter = require("./controllers/contact");
+const userRouter = require("./controllers/user");
+
+app.use("/api/persons", personRouter);
+
 app.use(middleware.unknownEndpoint);
 app.use(middleware.errorHandler);
 
-const personRouter = require("./controllers/note");
-app.use("/api/persons", personRouter);
 module.exports = app;
